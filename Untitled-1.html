@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>قرعة عشوائية لجدولة الاجتماع</title>
+    <style>
+        /* إعدادات الصفحة الأساسية */
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        /* تصميم الحاوية الرئيسية */
+        .container {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            align-items: center;
+            width: 90%;
+            max-width: 1200px;
+        }
+
+        /* تصميم كل فريق */
+        .team-container {
+            flex: 1;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            text-align: center;
+            position: relative;
+        }
+
+        /* تصميم عنوان الفريق */
+        h1 {
+            font-size: 26px;
+            color: #555;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        /* تصميم الأزرار */
+        button {
+            padding: 15px 30px;
+            font-size: 18px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* تصميم مربع النتائج */
+        .result {
+            margin-top: 20px;
+            font-size: 22px;
+            font-weight: bold;
+            color: #007bff;
+            padding: 15px;
+            border: 2px solid #007bff;
+            border-radius: 10px;
+            background-color: #e9f7ff;
+            width: 90%;
+            text-align: center;
+            min-height: 50px;
+            margin-left: auto;
+            margin-right: auto;
+            transition: transform 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* تأثير تمييز الاسم المختار */
+        .highlighted {
+            background-color: #ffe3e3;
+            color: #ff4949;
+            border-color: #ff4949;
+            position: relative;
+        }
+
+        /* تأثير الورود المتناثرة */
+        .highlighted:after {
+            content: "🌸🌼🌺";
+            position: absolute;
+            font-size: 1.5rem;
+            animation: floatFlowers 1s ease;
+            opacity: 0.7;
+            transform: rotate(-15deg);
+        }
+
+        @keyframes floatFlowers {
+            0%, 100% { opacity: 0; }
+            25%, 75% { opacity: 1; }
+        }
+        
+    </style>
+</head>
+<body>
+
+    <!-- الحاوية الرئيسية للفرق -->
+    <div class="container">
+
+        <!-- فريق الدعم الفني -->
+        <div class="team-container">
+            <h1>attendance</h1>
+            <button onclick="startSelection('support')">ابدأ القرعة</button>
+            <div class="result" id="result-support">-</div>
+        </div>
+
+        <!-- فريق HR -->
+        <div class="team-container">
+            <h1>HR</h1>
+            <button onclick="startSelection('hr')">ابدأ القرعة</button>
+            <div class="result" id="result-hr">-</div>
+        </div>
+
+        <!-- فريق مسير الرواتب -->
+        <div class="team-container">
+            <h1>Payroll</h1>
+            <button onclick="startSelection('payroll')">ابدأ القرعة</button>
+            <div class="result" id="result-payroll">-</div>
+        </div>
+
+    </div>
+
+    <script>
+        const teams = {
+            support: ["عبدالرحمن", "نادر", "خالد", "سلمان", "محمد"],
+            hr: ["عادل", "اسماء", "فهد", "ساره", "غنى", "ايمان"],
+            payroll: ["سعيد", "فاطمه", "محمد", "ريم", "ماهر"]
+        };
+        let interval;
+        let flowerEffectCount = 0;
+
+        function startSelection(team) {
+            clearInterval(interval);
+
+            const resultDiv = document.getElementById("result-" + team);
+            resultDiv.classList.remove("highlighted");
+            resultDiv.innerText = "-";
+            flowerEffectCount = 0;
+
+            let count = 0;
+
+            interval = setInterval(() => {
+                resultDiv.innerText = teams[team][Math.floor(Math.random() * teams[team].length)];
+                count += 100;
+
+                if (count >= 2000) {
+                    clearInterval(interval);
+                    selectRandom(team);
+                }
+            }, 100);
+        }
+
+        function selectRandom(team) {
+            const randomIndex = Math.floor(Math.random() * teams[team].length);
+            const selectedName = teams[team][randomIndex];
+            const resultDiv = document.getElementById("result-" + team);
+            resultDiv.innerText = "الشخص المختار هو: " + selectedName;
+            resultDiv.classList.add("highlighted");
+
+            flowerEffectCount = 0;
+            addFlowerEffect(resultDiv);
+        }
+
+        function addFlowerEffect(element) {
+            if (flowerEffectCount < 3) {
+                element.classList.add("highlighted");
+                setTimeout(() => {
+                    element.classList.remove("highlighted");
+                    flowerEffectCount++;
+                    addFlowerEffect(element);
+                }, 1000);
+            }
+        }
+    </script>
+
+</body>
+</html>
